@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane maxHeight="400.0" maxWidth="900.0" minHeight="400.0" minWidth="900.0" prefHeight="400.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.page1Controller">
+   <children>
+      <Label layoutX="356.0" layoutY="60.0" text="やってみよう！">
+         <font>
+            <Font size="36.0" />
+         </font></Label>
+      <Label layoutX="384.0" layoutY="120.0" text="短文入力">
+         <font>
+            <Font size="36.0" />
+         </font>
+      </Label>
+      <Label layoutX="351.0" layoutY="210.0" text="計測方法を選択してください">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Label>
+      <Button fx:id="modeM_Button" layoutX="271.0" layoutY="270.0" mnemonicParsing="false" onAction="#onModeM" text="10分間">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Button>
+      <Button fx:id="modeQ_Button" layoutX="551.0" layoutY="270.0" mnemonicParsing="false" onAction="#onModeQ" text="10問">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Button>
+      <Button fx:id="closeButton" layoutX="431.0" layoutY="342.0" mnemonicParsing="false" onAction="#onClose" text="終了">
+         <font>
+            <Font size="14.0" />
+         </font></Button>
+   </children>
+</AnchorPane>
