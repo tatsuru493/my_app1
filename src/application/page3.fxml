@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="400.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.page3Controller">
+<AnchorPane prefHeight="400.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.appController">
    <children>
       <Label fx:id="numberLabel" layoutX="443.0" layoutY="78.0" text="number" textAlignment="CENTER">
          <font>
@@ -28,7 +28,7 @@
          <font>
             <Font size="18.0" />
          </font></Button>
-      <Button fx:id="cancelButton" layoutX="800.0" layoutY="350.0" mnemonicParsing="false" onAction="#onCancel" text="キャンセル">
+      <Button fx:id="cancelButton_p3" layoutX="800.0" layoutY="350.0" mnemonicParsing="false" onAction="#onCancel_p3" text="キャンセル">
          <font>
             <Font size="14.0" />
          </font></Button>
