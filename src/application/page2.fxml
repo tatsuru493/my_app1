@@ -9,9 +9,9 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="400.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.page2Controller">
+<AnchorPane prefHeight="400.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.appController">
    <children>
-      <Label fx:id="label1" alignment="CENTER" layoutX="100.0" layoutY="80.0" prefWidth="700.0" text="check">
+      <Label fx:id="checkLabel" alignment="CENTER" layoutX="100.0" layoutY="80.0" prefWidth="700.0" text="check">
          <font>
             <Font size="24.0" />
          </font></Label>
@@ -25,6 +25,6 @@
             <Font size="18.0" />
          </font>
       </Button>
-      <Button fx:id="cancelButton" layoutX="635.0" layoutY="351.0" mnemonicParsing="false" onAction="#onCancel" text="キャンセル" />
+      <Button fx:id="cancelButton_p2" layoutX="635.0" layoutY="351.0" mnemonicParsing="false" onAction="#onCancel_p2" text="キャンセル" />
    </children>
 </AnchorPane>
