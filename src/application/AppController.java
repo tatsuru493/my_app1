@@ -9,7 +9,7 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.event.ActionEvent;
 
-public class appController {
+public class AppController {
 	
     @FXML
     private ResourceBundle resources;
