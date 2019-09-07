@@ -4,10 +4,11 @@ import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 
-public class page2Controller {
+public class page2Controller implements Initializable {
 
     @FXML
     private ResourceBundle resources;
@@ -26,12 +27,12 @@ public class page2Controller {
 
     @FXML
     void onCancel_p2(ActionEvent event) {
-
+    	Main.getInstance().backToPage1();
     }
 
     @FXML
     void onOK(ActionEvent event) {
-
+    	Main.getInstance().setPage3();
     }
 
     @FXML
@@ -41,4 +42,20 @@ public class page2Controller {
         assert cancelButton_p2 != null : "fx:id=\"cancelButton_p2\" was not injected: check your FXML file 'page2.fxml'.";
 
     }
+    
+    @Override
+    public void initialize(URL loacation, ResourceBundle resources) {
+    	switch(Main.getInstance().getMode()) {
+    	case 1:
+    		checkLabel.setText("10分間に何問できるか計測します");
+    		break;
+    	case 2:
+    		checkLabel.setText("10問にかかる時間を計測します");
+    		break;
+    	default:
+    		checkLabel.setText("error");
+    		break;
+    	}
+    }
+    
 }
