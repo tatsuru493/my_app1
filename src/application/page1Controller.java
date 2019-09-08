@@ -25,12 +25,12 @@ public class page1Controller {
 
     @FXML
     void onModeM(ActionEvent event) {
-    	Main.getInstance().setPage2_10minMode();
+    	Main.getInstance().setPage2(1);
     }
 
     @FXML
     void onModeQ(ActionEvent event) {
-    	Main.getInstance().setPage2_10Q_Mode();
+    	Main.getInstance().setPage2(2);
     }
 
     @FXML
