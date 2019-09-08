@@ -53,7 +53,6 @@ public class Main extends Application {
 	
 	private Calendar startTime;	//　10問モード測定用、測定開始時の現在時間
 	private Calendar endTime;	//　10問モード測定用、測定終了時の現在時間
-								//　end.getTimeInMillis()-start.getTimeInMillis()でタイムを計算
 	
 //---------------------------------
 
@@ -93,7 +92,7 @@ public class Main extends Application {
 		animation.play();
 	}
 	
-	//　--上記と逆方向にページがめくられるアニメーション、座標を変えただけ--
+	//　--View()とは逆方向にページがめくられるアニメーション、座標を変えただけ--
 	public void backView() {
 		Group g = new Group();
 		Rectangle rect = new Rectangle(0,-10,10,410);
@@ -116,7 +115,7 @@ public class Main extends Application {
 	public int getNum() {return pageNum;}	
 	
 	//　--アニメーションから指定のページに遷移する--
-	public TimerTask transitionTask() {
+	public void transitionTask() {
 		TimerTask task = new TimerTask() {
 			@Override
 			public void run() {
@@ -125,57 +124,52 @@ public class Main extends Application {
 					int num = getNum();
 					AnchorPane root = FXMLLoader.load( getClass().getResource(pageIndex[num]) );
 					//　-シーンをセット-
-					//　アニメーション処理中にシーンをセットしようとするとエラーとなってしまうので、
+					//　スレッド処理中にシーンをセットしようとするとエラーとなってしまうので、
 					//　Platform.runLaterでアイドル状態になるまで待機してから実行する
 					Platform.runLater( () -> setStage.setScene(new Scene(root)) );
-					//　-タイマーをキャンセルしておかないと2回目以降しようできなくなる-
+					//　-タイマーをキャンセルしておかないと2回目以降使用できなくなる-
 					animationTimer.cancel();
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
 			}
 		};
-		return task;
+		//　-タイマーを生成し、アニメーション開始から0.4秒後にtaskを実行、画面遷移する-
+		animationTimer = new Timer();
+		animationTimer.schedule(task, 400);
 	}
 	
-	public TimerTask measure10minTask() {
+	//　--10分間モード時に結果表示するためのタスク--
+	public void measure10minTask() {
 		TimerTask measureTask = new TimerTask() {
 			@Override
 			public void run()  {
-					Platform.runLater( () -> View() );
-					transitionTask();
-					animationTimer.schedule(transitionTask(), 400);
-					measureTimer.cancel();
+				//　-スレッド処理中なのでPlatform.runLater-
+				Platform.runLater( () -> View() );
+				setNum(3);
+				transitionTask();
+				measureTimer.cancel();
 			}
 		};
-		return measureTask;
+		//　-10分後に結果表示画面へ-
+		measureTimer = new Timer(false);
+		measureTimer.schedule(measureTask, 6000);
 	}
 	
 //---------------------------------
 	
-	public void setPage2_10minMode() {
-		//　-タイマー初期化、ページとモードの設定-
-		measureTimer = new Timer(false);
-		animationTimer = new Timer(false);
-		mode = 1;
+	//　--page1のonModeMとonModeQにて実行、引数でモードを設定しpage2へ遷移--
+	public void setPage2(int md) {
+		//　-ページとモードの設定-
+		mode = md;
 		setNum(1);
 		//　-アニメーション-
 		View();
-		//　-指定した時間（0.4秒後）にpage2へ遷移-
-		animationTimer.schedule(transitionTask(), 400);
+		//　-画面遷移-
+		transitionTask();
 	}
 	
-	public void setPage2_10Q_Mode() {
-		//　-タイマー初期化、ページとモードの設定-
-		animationTimer = new Timer(false);
-		mode = 2;
-		setNum(1);
-		//　-アニメーション-
-		View();
-		//　-指定した時間（0.4秒後）にpage2へ遷移-
-		animationTimer.schedule(transitionTask(), 400);
-	}
-	
+	//　--page1のonCloseにて実行、ウィンドウを閉じアプリを終了させる--
 	public void closeWindow(ActionEvent event) {
 		//　-ボタンのアクションイベントからシーンを取得、シーンからウィンドウを取得-
 		Scene scene = ( (Node) event.getSource() ).getScene();
@@ -184,27 +178,50 @@ public class Main extends Application {
 		window.hide();
 	}
 	
-	public void backToPage1() {
-		animationTimer = new Timer(false);
-		setNum(0);
-		backView();
-		animationTimer.schedule(transitionTask(), 400);
+	//　--page2のinitializeで実行され、モードによってcheckLabelに入る文字列を返す--
+	public String checkLabelText(int md) {
+		switch(md) {
+    	case 1:
+    		return ("10分間に何問できるか計測します");
+    	case 2:
+    		return ("10問にかかる時間を計測します");
+    	default:
+    		return ("error");
+    	}
 	}
 	
+	//　-他ページからpage1に戻るときに使用、backViewで戻っているように見せる-
+	public void backToPage1() {
+		setNum(0);
+		backView();
+		transitionTask();
+	}
+	
+	//　--page2のonOKにて実行、計測の準備をしつつpage3へ遷移--
 	public void setPage3() {
+		//　-計測用データを初期化-
 		count = 0;
 		score = 0;
 		questionList.clear();
 		answerList.clear();
 		markList.clear();
-		animationTimer = new Timer(false);
 		startTime = Calendar.getInstance();
+		//　-10分間モードではここでタスクをセットし10分後自動的に結果表示画面（page4）へ遷移する-
 		if(mode == 1) {
-			measureTimer.schedule(measure10minTask(), 600000);
+			measure10minTask();
 		}
+		//　-page3へ遷移-
+		setNum(2);
 		View();
-		animationTimer.schedule(transitionTask(), 400);
+		transitionTask();
 	}
+	
+	//　--page3のinitializeで実行され、numberLabelに入る問題数の文字列を返す--
+	
+	
+	//　--page3のonActionTextFieldとonNextにて実行、
+	//　　　問題文と入力内容を比較、正誤判定し各種データに代入、
+	//　　　次の問題へ移行--
 	
 	
 //---------------------------------
