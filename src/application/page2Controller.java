@@ -45,17 +45,8 @@ public class page2Controller implements Initializable {
     
     @Override
     public void initialize(URL loacation, ResourceBundle resources) {
-    	switch(Main.getInstance().getMode()) {
-    	case 1:
-    		checkLabel.setText("10分間に何問できるか計測します");
-    		break;
-    	case 2:
-    		checkLabel.setText("10問にかかる時間を計測します");
-    		break;
-    	default:
-    		checkLabel.setText("error");
-    		break;
-    	}
+    	int md = Main.getInstance().getMode();
+    	checkLabel.setText(Main.getInstance().checkLabelText(md));
     }
     
 }
