@@ -36,13 +36,13 @@ public class Main extends Application {
 	private Stage setStage = new Stage();	//　他のコントローラからStageを取得
 	
 	private int mode;	//　1が10分間モード、2が10問モード
-	public int getMode() {
-		return mode;
-	}
+	public int getMode() {return mode;}	//　アクセサメソッド
 	
 	private int count;	//　問題数
+	public int getCount() {return count;} //　アクセサメソッド
 	
 	private int score;	//　正解数
+	public int getScore() {return score;} //　アクセサメソッド
 	
 	private List<String> questionList = new ArrayList<String>();	//　問の文を格納
 	private List<String> answerList = new ArrayList<String>();	//　解答の文を格納
@@ -53,6 +53,10 @@ public class Main extends Application {
 	
 	private Calendar startTime;	//　10問モード測定用、測定開始時の現在時間
 	private Calendar endTime;	//　10問モード測定用、測定終了時の現在時間
+	
+	private String[] pageIndex	//　各ページのFXMLファイル名
+		= new String[] {"page1.fxml", "page2.fxml", "page3.fxml", "page4.fxml"};
+	private int pageNum;	//　読み込むページ番号を設定
 	
 //---------------------------------
 
@@ -108,12 +112,6 @@ public class Main extends Application {
 		animation.play();
 	}
 	
-	//　--遷移するページを設定するための変数とアクセサメソッド--
-	private String[] pageIndex = new String[] {"page1.fxml", "page2.fxml", "page3.fxml", "page4.fxml"};
-	private int pageNum;
-	public void setNum(int num) {pageNum = num;}
-	public int getNum() {return pageNum;}	
-	
 	//　--アニメーションから指定のページに遷移する--
 	public void transitionTask() {
 		TimerTask task = new TimerTask() {
@@ -121,8 +119,7 @@ public class Main extends Application {
 			public void run() {
 				try {
 					//　-ページ番号を設定、シーンを取得-
-					int num = getNum();
-					AnchorPane root = FXMLLoader.load( getClass().getResource(pageIndex[num]) );
+					AnchorPane root = FXMLLoader.load( getClass().getResource(pageIndex[pageNum]) );
 					//　-シーンをセット-
 					//　スレッド処理中にシーンをセットしようとするとエラーとなってしまうので、
 					//　Platform.runLaterでアイドル状態になるまで待機してから実行する
@@ -146,7 +143,7 @@ public class Main extends Application {
 			public void run()  {
 				//　-スレッド処理中なのでPlatform.runLater-
 				Platform.runLater( () -> View() );
-				setNum(3);
+				pageNum = 3;
 				transitionTask();
 				measureTimer.cancel();
 			}
@@ -162,7 +159,7 @@ public class Main extends Application {
 	public void setPage2(int md) {
 		//　-ページとモードの設定-
 		mode = md;
-		setNum(1);
+		pageNum = 1;
 		//　-アニメーション-
 		View();
 		//　-画面遷移-
@@ -192,7 +189,7 @@ public class Main extends Application {
 	
 	//　-他ページからpage1に戻るときに使用、backViewで戻っているように見せる-
 	public void backToPage1() {
-		setNum(0);
+		pageNum = 0;
 		backView();
 		transitionTask();
 	}
@@ -211,17 +208,23 @@ public class Main extends Application {
 			measure10minTask();
 		}
 		//　-page3へ遷移-
-		setNum(2);
+		pageNum = 2;
 		View();
 		transitionTask();
 	}
-	
-	//　--page3のinitializeで実行され、numberLabelに入る問題数の文字列を返す--
 	
 	
 	//　--page3のonActionTextFieldとonNextにて実行、
 	//　　　問題文と入力内容を比較、正誤判定し各種データに代入、
 	//　　　次の問題へ移行--
+	public void nextQuestion(String sentence, String textField) {
+		if(sentence.equals(textField)) {
+			score++;
+			markList.add("○");
+		} else {
+			markList.add("×");
+		}
+	}
 	
 	
 //---------------------------------
