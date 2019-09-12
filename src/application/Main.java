@@ -63,8 +63,7 @@ public class Main extends Application {
 	//　--10問モード結果表示画面移行時に実行、タイムを分秒で出力--
 	public String resultTime() {
 		String tm;
-		//　-測定終了、かかった時間をミリ秒で計算-
-		endTime = Calendar.getInstance();
+		//　-かかった時間を計算-
 		long mill = endTime.getTimeInMillis() - startTime.getTimeInMillis();
 		//　-ミリ秒を分秒に変換-
 		int TIME = (int)(mill/1000);
@@ -214,15 +213,33 @@ public class Main extends Application {
 	}
 	
 	
-	//　--page3のonActionTextFieldとonNextにて実行、
-	//　　　問題文と入力内容を比較、正誤判定し各種データに代入、
-	//　　　次の問題へ移行--
+	//　--page3のonActionTextFieldとonNextにて実行--
 	public void nextQuestion(String sentence, String textField) {
+		//　-問題文と入力内容を比較、結果を代入-
 		if(sentence.equals(textField)) {
 			score++;
 			markList.add("○");
 		} else {
 			markList.add("×");
+		}
+		//　-問題文と入力内容を各リストに加える-
+		questionList.add(sentence);
+		answerList.add(textField);
+		count++;
+		// -10問モードの場合、10問目が終わった時点で測定を終了させ、結果表示画面（page4）へ遷移する-
+		if(mode == 2 && count > 9) {
+			endTime = Calendar.getInstance();
+			pageNum = 3;
+			View();
+			transitionTask();
+			return;
+		}
+		//　-page3を再びセットする、測定中はアニメーションを入れない-
+		try {
+			AnchorPane root = FXMLLoader.load( getClass().getResource("page3.fxml") );
+			setStage.setScene(new Scene(root));			
+		} catch(Exception e) {
+			e.printStackTrace();
 		}
 	}
 	
