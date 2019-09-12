@@ -3,12 +3,13 @@ package application;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.event.ActionEvent;
 
-public class page4Controller {
+public class page4Controller implements Initializable {
 
     @FXML
     private ResourceBundle resources;
@@ -33,7 +34,7 @@ public class page4Controller {
 
     @FXML
     void onPrev(ActionEvent event) {
-
+    	Main.getInstance().backToPage1();
     }
 
     @FXML
@@ -45,4 +46,20 @@ public class page4Controller {
         assert resultLabel != null : "fx:id=\"resultLabel\" was not injected: check your FXML file 'page4.fxml'.";
 
     }
+    
+    @Override
+    public void initialize(URL loacation, ResourceBundle resources) {
+    	switch(Main.getInstance().getMode()) {
+    	case 1:
+    		resultLabel.setText("回答数 : " + Main.getInstance().getCount() + "問");
+    		break;
+    	case 2:
+    		resultLabel.setText("TIME : " + Main.getInstance().resultTime());
+    		break;
+    	default:
+    		resultLabel.setText("error");
+    		break;
+    	}
+    }
+    
 }
