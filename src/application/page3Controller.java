@@ -4,11 +4,12 @@ import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 
-public class page3Controller {
+public class page3Controller implements Initializable {
 
     @FXML
     private ResourceBundle resources;
@@ -33,7 +34,7 @@ public class page3Controller {
 
     @FXML
     void onActionTextField(ActionEvent event) {
-
+    	Main.getInstance().nextQuestion(sentenceLabel.getText(), TextField1.getText());
     }
 
     @FXML
@@ -43,7 +44,7 @@ public class page3Controller {
 
     @FXML
     void onNext(ActionEvent event) {
-
+    	Main.getInstance().nextQuestion(sentenceLabel.getText(), TextField1.getText());
     }
 
     @FXML
@@ -55,4 +56,10 @@ public class page3Controller {
         assert cancelButton_p3 != null : "fx:id=\"cancelButton_p3\" was not injected: check your FXML file 'page3.fxml'.";
 
     }
+    
+    @Override
+    public void initialize(URL loacation, ResourceBundle resources) {
+    	numberLabel.setText((Main.getInstance().getCount() + 1)  + "問目");
+    }
+    
 }
