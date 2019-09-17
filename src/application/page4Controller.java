@@ -8,6 +8,9 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.event.ActionEvent;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+
 
 public class page4Controller implements Initializable {
 
@@ -21,7 +24,8 @@ public class page4Controller implements Initializable {
     private Label scoreLabel;
 
     @FXML
-    private ListView<?> ListView1;
+    private ListView<String> ListView1;
+    private ObservableList<String> items;
 
     @FXML
     private Button prevButton;
@@ -54,11 +58,26 @@ public class page4Controller implements Initializable {
     		resultLabel.setText("回答数 : " + Main.getInstance().getCount() + "問");
     		break;
     	case 2:
-    		resultLabel.setText("TIME : " + Main.getInstance().resultTime());
+    		resultLabel.setText(Main.getInstance().resultTime());
     		break;
     	default:
     		resultLabel.setText("error");
     		break;
+    	}
+    	if(Main.getInstance().getCount() != 0 && Main.getInstance().getCount() == Main.getInstance().getScore()) {
+    		scoreLabel.setText("正解数 : " + Main.getInstance().getScore() + "問");
+    		perfectLabel.setText("PERFECT!!");
+    	} else {
+    		scoreLabel.setText("正解数 : " + Main.getInstance().getScore() + "問");
+    		perfectLabel.setText(" ");
+    	}
+    	items = FXCollections.observableArrayList();
+    	ListView1.setItems(items);
+    	for(int c = 0; c < Main.getInstance().getCount(); c++) {
+    		items.add(Main.getInstance().getMark(c));
+    		items.add(Main.getInstance().getAnswer(c));
+    		items.add(Main.getInstance().getQuestion(c));
+    		items.add(" ");
     	}
     }
     
