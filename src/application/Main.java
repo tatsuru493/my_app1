@@ -44,9 +44,12 @@ public class Main extends Application {
 	private int score;	//　正解数
 	public int getScore() {return score;} //　アクセサメソッド
 	
-	private List<String> questionList = new ArrayList<String>();	//　問の文を格納
-	private List<String> answerList = new ArrayList<String>();	//　解答の文を格納
 	private List<String> markList = new ArrayList<String>();	//　正誤（○×）を格納
+	private List<String> answerList = new ArrayList<String>();	//　入力した文を格納
+	private List<String> questionList = new ArrayList<String>();	//　問の文を格納
+	public String getMark(int c) {return (c + 1) + "問目 : " + markList.get(c);}
+	public String getAnswer(int c) {return "入力 : " + answerList.get(c);}
+	public String getQuestion(int c) {return "正解 : " + questionList.get(c);}
 	
 	private Timer measureTimer = new Timer(false);	//　10分間モード用タイマー
 	private Timer animationTimer = new Timer(false);	//　アニメーションを挟んだ画面遷移に使う
@@ -69,7 +72,7 @@ public class Main extends Application {
 		int TIME = (int)(mill/1000);
 		int min = TIME / 60;
 		int sec = TIME % 60;
-		tm = (min + "分" + sec + "秒");
+		tm = ("TIME : " + min + "分" + sec + "秒");
 		return tm;
 	}
 	
