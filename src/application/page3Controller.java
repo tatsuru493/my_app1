@@ -11,6 +11,8 @@ import javafx.scene.control.TextField;
 
 public class page3Controller implements Initializable {
 
+	Sentence sentence = new Sentence();
+	
     @FXML
     private ResourceBundle resources;
 
@@ -60,6 +62,7 @@ public class page3Controller implements Initializable {
     @Override
     public void initialize(URL loacation, ResourceBundle resources) {
     	numberLabel.setText((Main.getInstance().getCount() + 1)  + "問目");
+    	//sentenceLabel.setText(sentence.qestion());
     }
     
 }
