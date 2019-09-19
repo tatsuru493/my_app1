@@ -155,6 +155,29 @@ public class Main extends Application {
 		measureTimer.schedule(measureTask, 6000);
 	}
 	
+	//　--誤字があった箇所を表示させるための文字列--
+	public void getTypo(int c) {
+		List<Character> answerChar = new ArrayList<Character>();
+		List<Character> questionChar = new ArrayList<Character>();
+		List<String> typoList = new ArrayList<String>();
+		if( !(answerList.get(c).equals( questionList.get(c) ) ) ) {
+			//　-文字数が違う場合？？？-
+			for(int a = 0; a < answerList.size(); a++) {
+				answerChar.add( answerList.get(c).charAt(a) );
+			}
+			for(int a = 0; a < questionList.size(); a++) {
+				questionChar.add( questionList.get(c).charAt(a) );
+			}
+			//　-answerCharとquestionCharを1文字ずつ比較、trueの場合スペース、falseの場合answerCharをtypoListに格納-
+			for(int a= 0; a < answerChar.size(); a++) {
+				if( answerChar.get(a) == questionChar.get(a) ) {
+					typoList.add(" ");
+					return;
+				}
+			}
+		}
+	}
+	
 //---------------------------------
 	
 	//　--page1のonModeMとonModeQにて実行、引数でモードを設定しpage2へ遷移--
