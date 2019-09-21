@@ -48,8 +48,8 @@ public class Main extends Application {
 	private List<String> answerList = new ArrayList<String>();	//　入力した文を格納
 	private List<String> questionList = new ArrayList<String>();	//　問の文を格納
 	public String getMark(int c) {return (c + 1) + "問目 : " + markList.get(c);}
-	public String getAnswer(int c) {return "入力 : " + answerList.get(c);}
-	public String getQuestion(int c) {return "正解 : " + questionList.get(c);}
+	public String getAnswer(int c) {return answerList.get(c);}
+	public String getQuestion(int c) {return questionList.get(c);}
 	
 	private Timer measureTimer = new Timer(false);	//　10分間モード用タイマー
 	private Timer animationTimer = new Timer(false);	//　アニメーションを挟んだ画面遷移に使う
@@ -156,26 +156,29 @@ public class Main extends Application {
 	}
 	
 	//　--誤字があった箇所を表示させるための文字列--
-	public void getTypo(int c) {
+	public String getTypo(int c) {
 		List<Character> answerChar = new ArrayList<Character>();
 		List<Character> questionChar = new ArrayList<Character>();
 		List<String> typoList = new ArrayList<String>();
-		if( !(answerList.get(c).equals( questionList.get(c) ) ) ) {
-			//　-文字数が違う場合？？？-
-			for(int a = 0; a < answerList.size(); a++) {
-				answerChar.add( answerList.get(c).charAt(a) );
-			}
-			for(int a = 0; a < questionList.size(); a++) {
-				questionChar.add( questionList.get(c).charAt(a) );
-			}
-			//　-answerCharとquestionCharを1文字ずつ比較、trueの場合スペース、falseの場合answerCharをtypoListに格納-
-			for(int a= 0; a < answerChar.size(); a++) {
-				if( answerChar.get(a) == questionChar.get(a) ) {
-					typoList.add(" ");
-					return;
-				}
+		String typo = "";
+		for(int a = 0; a < answerList.get(c).length(); a++) {
+			answerChar.add( answerList.get(c).charAt(a) );
+		}
+		for(int a = 0; a < questionList.get(c).length(); a++) {
+			questionChar.add( questionList.get(c).charAt(a) );
+		}
+		//　-answerCharとquestionCharを1文字ずつ比較、trueの場合スペース、falseの場合answerCharをtypoListに格納-
+		for(int a= 0; a < answerChar.size() && a < questionChar.size(); a++) {
+			if( answerChar.get(a) == questionChar.get(a) ) {
+				typoList.add("  ");
+			} else {
+				typoList.add( String.valueOf(answerChar.get(a)) );
 			}
 		}
+		for( int a = 0; a < typoList.size(); a++ ) {
+			typo = typo + typoList.get(a);
+		}
+		return typo;
 	}
 	
 //---------------------------------
