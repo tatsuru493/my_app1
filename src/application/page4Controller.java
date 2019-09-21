@@ -74,9 +74,13 @@ public class page4Controller implements Initializable {
     	items = FXCollections.observableArrayList();
     	ListView1.setItems(items);
     	for(int c = 0; c < Main.getInstance().getCount(); c++) {
-    		items.add(Main.getInstance().getMark(c));
-    		items.add(Main.getInstance().getAnswer(c));
-    		items.add(Main.getInstance().getQuestion(c));
+    		items.add( Main.getInstance().getMark(c) );
+    		items.add( "入力 : " + Main.getInstance().getAnswer(c) );
+    		items.add( "正解 : " + Main.getInstance().getQuestion(c) );
+    		if( !(Main.getInstance().getAnswer(c).equals( Main.getInstance().getQuestion(c) ) ) ) {
+    			items.add( "誤字 : " + Main.getInstance().getTypo(c) );
+    			
+    		}
     		items.add(" ");
     	}
     }
