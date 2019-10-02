@@ -6,6 +6,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.event.ActionEvent;
 import javafx.collections.FXCollections;
@@ -73,13 +74,30 @@ public class page4Controller implements Initializable {
     	}
     	items = FXCollections.observableArrayList();
     	ListView1.setItems(items);
+    	
+    	ListView1.setCellFactory(ListView -> {
+    		final ListCell<String> cell = new ListCell<String>() {
+    			@Override
+    			protected void updateItem(String item, boolean empty) {
+    				super.updateItem(item, empty);
+    				if(!empty) {
+    					if( "誤字 : ".equals("誤字 : ") ) {
+    						setStyle("-fx-text-background-color:red");
+                        } else {
+                            getStyleClass().remove("-fx-text-background-color:red");
+    					}
+    				}
+    			}
+    		};
+    		return cell;
+    	});
+    	
     	for(int c = 0; c < Main.getInstance().getCount(); c++) {
     		items.add( Main.getInstance().getMark(c) );
     		items.add( "入力 : " + Main.getInstance().getAnswer(c) );
     		items.add( "正解 : " + Main.getInstance().getQuestion(c) );
     		if( !(Main.getInstance().getAnswer(c).equals( Main.getInstance().getQuestion(c) ) ) ) {
     			items.add( "誤字 : " + Main.getInstance().getTypo(c) );
-    			
     		}
     		items.add(" ");
     	}
