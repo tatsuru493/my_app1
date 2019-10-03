@@ -74,24 +74,6 @@ public class page4Controller implements Initializable {
     	}
     	items = FXCollections.observableArrayList();
     	ListView1.setItems(items);
-    	
-    	ListView1.setCellFactory(ListView -> {
-    		final ListCell<String> cell = new ListCell<String>() {
-    			@Override
-    			protected void updateItem(String item, boolean empty) {
-    				super.updateItem(item, empty);
-    				if(!empty) {
-    					if( "誤字 : ".equals("誤字 : ") ) {
-    						setStyle("-fx-text-background-color:red");
-                        } else {
-                            getStyleClass().remove("-fx-text-background-color:red");
-    					}
-    				}
-    			}
-    		};
-    		return cell;
-    	});
-    	
     	for(int c = 0; c < Main.getInstance().getCount(); c++) {
     		items.add( Main.getInstance().getMark(c) );
     		items.add( "入力 : " + Main.getInstance().getAnswer(c) );
@@ -101,6 +83,28 @@ public class page4Controller implements Initializable {
     		}
     		items.add(" ");
     	}
+    	
+    	ListView1.setCellFactory(ListView -> {
+    		final ListCell<String> cell = new ListCell<String>() {
+    			@Override
+    			protected void updateItem(String item, boolean empty) {
+    				super.updateItem(item, empty);
+    				if(empty || item == null) {
+    					setText(null);
+    					setGraphic(null);
+    				} else {
+    					setText( item.toString() );
+    				}
+    				if( items.contains("誤字 : ") ) {
+    					setStyle("-fx-text-background-color:red");
+    				} else {
+    					getStyleClass().remove("-fx-text-background-color:red");
+    				}
+    			}
+    		};
+    		return cell;
+    	});
+    	
     }
     
 }
