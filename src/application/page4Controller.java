@@ -8,6 +8,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
+import javafx.scene.paint.Color;
 import javafx.event.ActionEvent;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -65,11 +66,10 @@ public class page4Controller implements Initializable {
     		resultLabel.setText("error");
     		break;
     	}
+    	scoreLabel.setText("正解数 : " + Main.getInstance().getScore() + "問");
     	if(Main.getInstance().getCount() != 0 && Main.getInstance().getCount() == Main.getInstance().getScore()) {
-    		scoreLabel.setText("正解数 : " + Main.getInstance().getScore() + "問");
     		perfectLabel.setText("PERFECT!!");
     	} else {
-    		scoreLabel.setText("正解数 : " + Main.getInstance().getScore() + "問");
     		perfectLabel.setText(" ");
     	}
     	items = FXCollections.observableArrayList();
@@ -94,11 +94,11 @@ public class page4Controller implements Initializable {
     					setGraphic(null);
     				} else {
     					setText( item.toString() );
-    				}
-    				if( items.contains("誤字 : ") ) {
-    					setStyle("-fx-text-background-color:red");
-    				} else {
-    					getStyleClass().remove("-fx-text-background-color:red");
+    					if( item.contains("誤字 : ") ) {
+    						setTextFill(Color.RED);
+    					} else {
+    						setTextFill(Color.BLACK);
+    					}
     				}
     			}
     		};
