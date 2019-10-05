@@ -41,7 +41,7 @@ public class page3Controller implements Initializable {
 
     @FXML
     void onCancel_p3(ActionEvent event) {
-
+    	Main.getInstance().cancel();
     }
 
     @FXML
