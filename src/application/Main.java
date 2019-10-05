@@ -26,49 +26,46 @@ import java.util.Calendar;
 
 public class Main extends Application {
 	
-//---------------------------------
+//---↓↓メンバ変数とアクセサメソッド↓↓---
 	
-	public static Main singleton;	//　インスタンスを保持
-	public static Main getInstance() {
-		return singleton;
-	}
+	// 他のコントローラ間で値を共有したいのでシングルトンパターンとした
+	public static Main singleton;
+	public static Main getInstance() { return singleton; }
 	
-	private Stage setStage = new Stage();	//　他のコントローラからStageを取得
+	private Stage setStage = new Stage();
 	
-	private int mode;	//　1が10分間モード、2が10問モード
-	public int getMode() {return mode;}	//　アクセサメソッド
+	private int mode;
+	public int getMode() { return mode; }
 	
-	private int count;	//　問題数
-	public int getCount() {return count;} //　アクセサメソッド
+	private int count;
+	public int getCount() { return count; }
 	
-	private int score;	//　正解数
-	public int getScore() {return score;} //　アクセサメソッド
+	private int score;
+	public int getScore() { return score; }
 	
-	private List<String> markList = new ArrayList<String>();	//　正誤（○×）を格納
-	private List<String> answerList = new ArrayList<String>();	//　入力した文を格納
-	private List<String> questionList = new ArrayList<String>();	//　問の文を格納
-	public String getMark(int c) {return (c + 1) + "問目 : " + markList.get(c);}
-	public String getAnswer(int c) {return answerList.get(c);}
-	public String getQuestion(int c) {return questionList.get(c);}
+	private List<String> markList = new ArrayList<String>();
+	private List<String> answerList = new ArrayList<String>();
+	private List<String> questionList = new ArrayList<String>();
+	public String getMark(int c) { return (c + 1) + "問目 : " + markList.get(c); }
+	public String getAnswer(int c) { return answerList.get(c); }
+	public String getQuestion(int c) { return questionList.get(c); }
 	
-	private Timer measureTimer = new Timer(false);	//　10分間モード用タイマー
-	private Timer animationTimer = new Timer(false);	//　アニメーションを挟んだ画面遷移に使う
+	private Timer measureTimer = new Timer(false);
+	private Timer animationTimer = new Timer(false);
 	
-	private Calendar startTime;	//　10問モード測定用、測定開始時の現在時間
-	private Calendar endTime;	//　10問モード測定用、測定終了時の現在時間
+	private Calendar startTime;
+	private Calendar endTime;
 	
-	private String[] pageIndex	//　各ページのFXMLファイル名
-		= new String[] {"page1.fxml", "page2.fxml", "page3.fxml", "page4.fxml"};
-	private int pageNum;	//　読み込むページ番号を設定
+	private String[] pageIndex
+		= new String[] { "page1.fxml", "page2.fxml", "page3.fxml", "page4.fxml" };
+	private int pageNum;
 	
-//---------------------------------
+//---↓↓メソッド↓↓---
 
 	//　--10問モード結果表示画面移行時に実行、タイムを分秒で出力--
 	public String resultTime() {
 		String tm;
-		//　-かかった時間を計算-
 		long mill = endTime.getTimeInMillis() - startTime.getTimeInMillis();
-		//　-ミリ秒を分秒に変換-
 		int TIME = (int)(mill/1000);
 		int min = TIME / 60;
 		int sec = TIME % 60;
@@ -76,25 +73,19 @@ public class Main extends Application {
 		return tm;
 	}
 	
-	//　--画面遷移時にページがめくられるようなアニメーションを挟む--
+	//　--ページがめくられるようなアニメーション--
 	public void View() {
-		//　-シーングラフ作成-
 		Group g = new Group();
-		//　-動く図形の形と効果の設定、シーングラフに追加-
 		Rectangle rect = new Rectangle(0,-10,10,410);
 		DropShadow dropshadow = new DropShadow(BlurType.GAUSSIAN, Color.GRAY, 10, 0.3, -1, 0);
 		rect.setEffect(dropshadow);
 		g.getChildren().add(rect);
-		//　-アニメーションの軌道、時間を設定-
 		TranslateTransition animation = new TranslateTransition(Duration.seconds(0.3), rect);
-		//　-開始、終了座標の設定-
 		animation.setFromY(0);
 		animation.setToY(0);
 		animation.setFromX(-10);
 		animation.setToX(910);
-		//　-シーンをセット-
 		setStage.setScene(new Scene(g, 900, 400));
-		//　-アニメーション開始-
 		animation.play();
 	}
 	
@@ -120,20 +111,15 @@ public class Main extends Application {
 			@Override
 			public void run() {
 				try {
-					//　-ページ番号を設定、シーンを取得-
-					AnchorPane root = FXMLLoader.load( getClass().getResource(pageIndex[pageNum]) );
-					//　-シーンをセット-
-					//　スレッド処理中にシーンをセットしようとするとエラーとなってしまうので、
-					//　Platform.runLaterでアイドル状態になるまで待機してから実行する
+					AnchorPane root = FXMLLoader.load(getClass().getResource(pageIndex[pageNum]));
+					//　スレッド処理中にシーンをセットしようとするとエラーとなってしまうのでPlatform.runLaterでアイドル状態になるまで待機してから実行する
 					Platform.runLater( () -> setStage.setScene(new Scene(root)) );
-					//　-タイマーをキャンセルしておかないと2回目以降使用できなくなる-
 					animationTimer.cancel();
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
 			}
 		};
-		//　-タイマーを生成し、アニメーション開始から0.4秒後にtaskを実行、画面遷移する-
 		animationTimer = new Timer();
 		animationTimer.schedule(task, 400);
 	}
@@ -143,19 +129,18 @@ public class Main extends Application {
 		TimerTask measureTask = new TimerTask() {
 			@Override
 			public void run()  {
-				//　-スレッド処理中なのでPlatform.runLater-
 				Platform.runLater( () -> View() );
 				pageNum = 3;
 				transitionTask();
 				measureTimer.cancel();
 			}
 		};
-		//　-10分後に結果表示画面へ-
 		measureTimer = new Timer(false);
 		measureTimer.schedule(measureTask, 6000);
 	}
 	
-	//　--誤字があった箇所を表示させるための文字列--
+	
+	//　--誤字があった箇所の文字列--
 	public String getTypo(int c) {
 		List<Character> answerChar = new ArrayList<Character>();
 		List<Character> questionChar = new ArrayList<Character>();
@@ -165,43 +150,39 @@ public class Main extends Application {
 			answerChar.add( answerList.get(c).charAt(a) );
 		}
 		for(int a = 0; a < questionList.get(c).length(); a++) {
-			questionChar.add( questionList.get(c).charAt(a) );
+			questionChar.add(questionList.get(c).charAt(a));
 		}
-		//　-answerCharとquestionCharを1文字ずつ比較、trueの場合スペース、falseの場合answerCharをtypoListに格納-
 		for(int a= 0; a < answerChar.size() && a < questionChar.size(); a++) {
-			if( answerChar.get(a) == questionChar.get(a) ) {
+			if(answerChar.get(a) == questionChar.get(a)) {
 				typoList.add("  ");
 			} else {
-				typoList.add( String.valueOf(answerChar.get(a)) );
+				typoList.add(String.valueOf(answerChar.get(a)));
 			}
 		}
-		for( int a = 0; a < typoList.size(); a++ ) {
+		for(int a = 0; a < typoList.size(); a++) {
 			typo = typo + typoList.get(a);
 		}
 		return typo;
 	}
 	
-//---------------------------------
+//---↓↓↓イベント・ハンドラにて実行されるメソッド↓↓↓---
 	
 	//　--page1のonModeMとonModeQにて実行、引数でモードを設定しpage2へ遷移--
 	public void setPage2(int md) {
-		//　-ページとモードの設定-
 		mode = md;
 		pageNum = 1;
-		//　-アニメーション-
 		View();
-		//　-画面遷移-
 		transitionTask();
 	}
 	
+	
 	//　--page1のonCloseにて実行、ウィンドウを閉じアプリを終了させる--
 	public void closeWindow(ActionEvent event) {
-		//　-ボタンのアクションイベントからシーンを取得、シーンからウィンドウを取得-
-		Scene scene = ( (Node) event.getSource() ).getScene();
+		Scene scene = ((Node) event.getSource()).getScene();
 		Window window = scene.getWindow();
-		//　-取得したウィンドウをhideメソッドによって閉じる-
 		window.hide();
 	}
+	
 	
 	//　--page2のinitializeで実行され、モードによってcheckLabelに入る文字列を返す--
 	public String checkLabelText(int md) {
@@ -215,46 +196,47 @@ public class Main extends Application {
     	}
 	}
 	
-	//　-他ページからpage1に戻るときに使用、backViewで戻っているように見せる-
+	
+	//　--他ページからpage1に戻るときに実行、backViewで戻っているように見せる--
 	public void backToPage1() {
 		pageNum = 0;
 		backView();
 		transitionTask();
 	}
 	
+	
 	//　--page2のonOKにて実行、計測の準備をしつつpage3へ遷移--
 	public void setPage3() {
-		//　-計測用データを初期化-
 		count = 0;
 		score = 0;
 		questionList.clear();
 		answerList.clear();
 		markList.clear();
 		startTime = Calendar.getInstance();
+		
 		//　-10分間モードではここでタスクをセットし10分後自動的に結果表示画面（page4）へ遷移する-
 		if(mode == 1) {
 			measure10minTask();
 		}
-		//　-page3へ遷移-
+		
 		pageNum = 2;
 		View();
 		transitionTask();
 	}
 	
 	
-	//　--page3のonActionTextFieldとonNextにて実行--
+	//　--page3のonActionTextFieldとonNextにて実行、page3を再びセットする--
 	public void nextQuestion(String sentence, String textField) {
-		//　-問題文と入力内容を比較、結果を代入-
 		if(sentence.equals(textField)) {
 			score++;
 			markList.add("○");
 		} else {
 			markList.add("×");
 		}
-		//　-問題文と入力内容を各リストに加える-
 		questionList.add(sentence);
 		answerList.add(textField);
 		count++;
+		
 		// -10問モードの場合、10問目が終わった時点で測定を終了させ、結果表示画面（page4）へ遷移する-
 		if(mode == 2 && count > 9) {
 			endTime = Calendar.getInstance();
@@ -263,15 +245,27 @@ public class Main extends Application {
 			transitionTask();
 			return;
 		}
-		//　-page3を再びセットする、測定中はアニメーションを入れない-
+		
 		try {
-			AnchorPane root = FXMLLoader.load( getClass().getResource("page3.fxml") );
+			AnchorPane root = FXMLLoader.load(getClass().getResource("page3.fxml"));
 			setStage.setScene(new Scene(root));			
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
 	}
 	
+	
+	// --page3のonCancel_p3にて実行、測定を終了させ結果表示画面(page4)へ遷移する--
+	public void cancel() {
+		if(mode == 1) {
+			measureTimer.cancel();
+		} else if(mode == 2) {
+			endTime = Calendar.getInstance();
+		}
+		pageNum = 3;
+		View();
+		transitionTask();
+	}
 	
 //---------------------------------
 	
