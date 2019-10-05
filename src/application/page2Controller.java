@@ -45,6 +45,7 @@ public class page2Controller implements Initializable {
     
     @Override
     public void initialize(URL loacation, ResourceBundle resources) {
+    	//-引数にアクセサメソッドを書くと読みづらくなるため-
     	int md = Main.getInstance().getMode();
     	checkLabel.setText(Main.getInstance().checkLabelText(md));
     }
