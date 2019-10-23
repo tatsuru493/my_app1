@@ -4,10 +4,8 @@ import javafx.animation.TranslateTransition;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.stage.Stage;
-import javafx.stage.Window;
 import javafx.util.Duration;
 import javafx.scene.Group;
-import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.effect.BlurType;
 import javafx.scene.effect.DropShadow;
@@ -15,7 +13,6 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.fxml.FXMLLoader;
-import javafx.event.ActionEvent;
 import java.util.List;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -56,7 +53,7 @@ public class Main extends Application {
 	private Calendar startTime;
 	private Calendar endTime;
 	
-	private String[] pageIndex
+	private final String[] pageIndex
 		= new String[] { "page1.fxml", "page2.fxml", "page3.fxml", "page4.fxml" };
 	private int pageNum;
 	
@@ -176,14 +173,6 @@ public class Main extends Application {
 	}
 	
 	
-	//　--page1のonCloseにて実行、ウィンドウを閉じアプリを終了させる--
-	public void closeWindow(ActionEvent event) {
-		Scene scene = ((Node) event.getSource()).getScene();
-		Window window = scene.getWindow();
-		window.hide();
-	}
-	
-	
 	//　--page2のinitializeで実行され、モードによってcheckLabelに入る文字列を返す--
 	public String checkLabelText(int md) {
 		switch(md) {
@@ -227,6 +216,7 @@ public class Main extends Application {
 	
 	//　--page3のonActionTextFieldとonNextにて実行、page3を再びセットする--
 	public void nextQuestion(String sentence, String textField) {
+		
 		if(sentence.equals(textField)) {
 			score++;
 			markList.add("○");
@@ -252,6 +242,7 @@ public class Main extends Application {
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
+		
 	}
 	
 	
@@ -265,6 +256,27 @@ public class Main extends Application {
 		pageNum = 3;
 		View();
 		transitionTask();
+	}
+	
+	// --page4にてモードによってresultLabelに入る文字列を返す--
+	public String setResult(int md) {
+		switch(md) {
+		case 1:
+			return ("回答数 : " + count + "問");
+		case 2:
+			return resultTime();
+		default:
+			return ("error");
+		}
+	}
+	
+	// --page4にてモードによってperfectLabelに入る文字列を返す--
+	public String setPerfect(boolean b) {
+		if(b) {
+			return ("PERFECT!!");
+		} else {
+			return (" ");
+		}
 	}
 	
 //---------------------------------
@@ -284,6 +296,11 @@ public class Main extends Application {
 		}
 	}
 	
+	@Override
+	public void stop() {
+		System.exit(0);
+	}
+		
 	public static void main(String[] args) {
 		launch(args);
 	}
