@@ -55,35 +55,27 @@ public class page4Controller implements Initializable {
     
     @Override
     public void initialize(URL loacation, ResourceBundle resources) {
-    	switch(Main.getInstance().getMode()) {
-    	case 1:
-    		resultLabel.setText("回答数 : " + Main.getInstance().getCount() + "問");
-    		break;
-    	case 2:
-    		resultLabel.setText(Main.getInstance().resultTime());
-    		break;
-    	default:
-    		resultLabel.setText("error");
-    		break;
-    	}
+    	int mode = Main.getInstance().getMode();
+    	boolean perfect = Main.getInstance().getCount() != 0
+    			&& Main.getInstance().getCount() == Main.getInstance().getScore();
+    	
+    	resultLabel.setText(Main.getInstance().setResult(mode));
     	scoreLabel.setText("正解数 : " + Main.getInstance().getScore() + "問");
-    	if(Main.getInstance().getCount() != 0 && Main.getInstance().getCount() == Main.getInstance().getScore()) {
-    		perfectLabel.setText("PERFECT!!");
-    	} else {
-    		perfectLabel.setText(" ");
-    	}
+    	perfectLabel.setText(Main.getInstance().setPerfect(perfect));
+    	
     	items = FXCollections.observableArrayList();
     	ListView1.setItems(items);
     	for(int c = 0; c < Main.getInstance().getCount(); c++) {
     		items.add( Main.getInstance().getMark(c) );
     		items.add( "入力 : " + Main.getInstance().getAnswer(c) );
     		items.add( "正解 : " + Main.getInstance().getQuestion(c) );
-    		if( !(Main.getInstance().getAnswer(c).equals( Main.getInstance().getQuestion(c) ) ) ) {
+    		if( !(Main.getInstance().getAnswer(c).equals(Main.getInstance().getQuestion(c)) ) ) {
     			items.add( "誤字 : " + Main.getInstance().getTypo(c) );
     		}
     		items.add(" ");
     	}
     	
+    	// -この部分のネストが深くなってしまっている-
     	ListView1.setCellFactory(ListView -> {
     		final ListCell<String> cell = new ListCell<String>() {
     			@Override
