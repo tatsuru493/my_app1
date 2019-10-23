@@ -5,6 +5,7 @@ import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.event.ActionEvent;
+import javafx.application.Platform;
 
 public class page1Controller {
 	
@@ -35,7 +36,7 @@ public class page1Controller {
 
     @FXML
     void onClose(ActionEvent event) {
-    	Main.getInstance().closeWindow(event);
+    	Platform.exit();
     }
 
     @FXML
