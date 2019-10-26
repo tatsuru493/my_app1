@@ -62,7 +62,7 @@ public class page3Controller implements Initializable {
     @Override
     public void initialize(URL loacation, ResourceBundle resources) {
     	numberLabel.setText((Main.getInstance().getCount() + 1)  + "問目");
-    	//sentenceLabel.setText(sentence.qestion());
+    	sentenceLabel.setText(sentence.question());
     }
     
 }
