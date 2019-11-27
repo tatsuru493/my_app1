@@ -139,25 +139,15 @@ public class Main extends Application {
 	
 	//　--誤字があった箇所の文字列--
 	public String getTypo(int c) {
-		List<Character> answerChar = new ArrayList<Character>();
-		List<Character> questionChar = new ArrayList<Character>();
-		List<String> typoList = new ArrayList<String>();
 		String typo = "";
-		for(int a = 0; a < answerList.get(c).length(); a++) {
-			answerChar.add( answerList.get(c).charAt(a) );
-		}
-		for(int a = 0; a < questionList.get(c).length(); a++) {
-			questionChar.add(questionList.get(c).charAt(a));
-		}
-		for(int a= 0; a < answerChar.size() && a < questionChar.size(); a++) {
-			if(answerChar.get(a) == questionChar.get(a)) {
-				typoList.add("  ");
+		char[] answerChar = answerList.get(c).toCharArray();
+		char[] questionChar = questionList.get(c).toCharArray();
+		for(int a= 0; a < answerChar.length && a < questionChar.length; a++) {
+			if(!(answerChar[a] == questionChar[a])) {
+				typo = typo + String.valueOf(answerChar[a]);
 			} else {
-				typoList.add(String.valueOf(answerChar.get(a)));
+				typo = typo + " ";
 			}
-		}
-		for(int a = 0; a < typoList.size(); a++) {
-			typo = typo + typoList.get(a);
 		}
 		return typo;
 	}
