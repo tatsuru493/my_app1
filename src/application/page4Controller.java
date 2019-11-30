@@ -26,29 +26,29 @@ public class page4Controller implements Initializable {
     private Label scoreLabel;
 
     @FXML
-    private ListView<String> ListView1;
+    private ListView<String> ansDispListView;
     private ObservableList<String> items;
 
     @FXML
-    private Button prevButton;
+    private Button backToPage1Button;
 
     @FXML
-    private Label perfectLabel;
+    private Label evalLabel;
 
     @FXML
     private Label resultLabel;
 
     @FXML
-    void onPrev(ActionEvent event) {
+    void onBackToPage1Button(ActionEvent event) {
     	Main.getInstance().backToPage1();
     }
 
     @FXML
     void initialize() {
         assert scoreLabel != null : "fx:id=\"correctLabel\" was not injected: check your FXML file 'page4.fxml'.";
-        assert ListView1 != null : "fx:id=\"ListView1\" was not injected: check your FXML file 'page4.fxml'.";
-        assert prevButton != null : "fx:id=\"prevButton\" was not injected: check your FXML file 'page4.fxml'.";
-        assert perfectLabel != null : "fx:id=\"perfectLabel\" was not injected: check your FXML file 'page4.fxml'.";
+        assert ansDispListView != null : "fx:id=\"ListView1\" was not injected: check your FXML file 'page4.fxml'.";
+        assert backToPage1Button != null : "fx:id=\"prevButton\" was not injected: check your FXML file 'page4.fxml'.";
+        assert evalLabel != null : "fx:id=\"perfectLabel\" was not injected: check your FXML file 'page4.fxml'.";
         assert resultLabel != null : "fx:id=\"resultLabel\" was not injected: check your FXML file 'page4.fxml'.";
 
     }
@@ -56,16 +56,18 @@ public class page4Controller implements Initializable {
     @Override
     public void initialize(URL loacation, ResourceBundle resources) {
     	int mode = Main.getInstance().getMode();
-    	boolean perfect = Main.getInstance().getCount() != 0
-    			&& Main.getInstance().getCount() == Main.getInstance().getScore();
+    	boolean perfect = !(Main.getInstance().getQuesCount() == 0)
+    					&& Main.getInstance().getQuesCount() == Main.getInstance().getScore();
+    	boolean good = !(Main.getInstance().getQuesCount() == 0)
+    					&& (float)Main.getInstance().getQuesCount()*4/5 <= (float)Main.getInstance().getScore();
     	
     	resultLabel.setText(Main.getInstance().setResult(mode));
     	scoreLabel.setText("正解数 : " + Main.getInstance().getScore() + "問");
-    	perfectLabel.setText(Main.getInstance().setPerfect(perfect));
+    	evalLabel.setText(Main.getInstance().setPerfect(perfect, good));
     	
     	items = FXCollections.observableArrayList();
-    	ListView1.setItems(items);
-    	for(int c = 0; c < Main.getInstance().getCount(); c++) {
+    	ansDispListView.setItems(items);
+    	for(int c = 0; c < Main.getInstance().getQuesCount(); c++) {
     		items.add( Main.getInstance().getMark(c) );
     		items.add( "入力 : " + Main.getInstance().getAnswer(c) );
     		items.add( "正解 : " + Main.getInstance().getQuestion(c) );
@@ -75,8 +77,7 @@ public class page4Controller implements Initializable {
     		items.add(" ");
     	}
     	
-    	// -この部分のネストが深くなってしまっている-
-    	ListView1.setCellFactory(ListView -> {
+    	ansDispListView.setCellFactory(ListView -> {
     		final ListCell<String> cell = new ListCell<String>() {
     			@Override
     			protected void updateItem(String item, boolean empty) {
@@ -84,13 +85,13 @@ public class page4Controller implements Initializable {
     				if(empty || item == null) {
     					setText(null);
     					setGraphic(null);
+    					return;
+    				}
+    				setText( item.toString() );
+    				if( item.contains("誤字 : ") ) {
+    					setTextFill(Color.RED);
     				} else {
-    					setText( item.toString() );
-    					if( item.contains("誤字 : ") ) {
-    						setTextFill(Color.RED);
-    					} else {
-    						setTextFill(Color.BLACK);
-    					}
+    					setTextFill(Color.BLACK);
     				}
     			}
     		};
