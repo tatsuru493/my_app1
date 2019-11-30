@@ -34,8 +34,8 @@ public class Main extends Application {
 	private int mode;
 	public int getMode() { return mode; }
 	
-	private int count;
-	public int getCount() { return count; }
+	private int quesCount;
+	public int getQuesCount() { return quesCount; }
 	
 	private int score;
 	public int getScore() { return score; }
@@ -71,7 +71,7 @@ public class Main extends Application {
 	}
 	
 	//　--ページがめくられるようなアニメーション--
-	public void View() {
+	public void turnPageAnimation() {
 		Group g = new Group();
 		Rectangle rect = new Rectangle(0,-10,10,410);
 		DropShadow dropshadow = new DropShadow(BlurType.GAUSSIAN, Color.GRAY, 10, 0.3, -1, 0);
@@ -87,7 +87,7 @@ public class Main extends Application {
 	}
 	
 	//　--View()とは逆方向にページがめくられるアニメーション、座標を変えただけ--
-	public void backView() {
+	public void backTurnPageAnimation() {
 		Group g = new Group();
 		Rectangle rect = new Rectangle(0,-10,10,410);
 		DropShadow dropshadow = new DropShadow(BlurType.GAUSSIAN, Color.GRAY, 10, 0.3, -1, 0);
@@ -126,14 +126,14 @@ public class Main extends Application {
 		TimerTask measureTask = new TimerTask() {
 			@Override
 			public void run()  {
-				Platform.runLater( () -> View() );
+				Platform.runLater( () -> turnPageAnimation() );
 				pageNum = 3;
 				transitionTask();
 				measureTimer.cancel();
 			}
 		};
 		measureTimer = new Timer(false);
-		measureTimer.schedule(measureTask, 6000);
+		measureTimer.schedule(measureTask, 60000);
 	}
 	
 	
@@ -147,6 +147,18 @@ public class Main extends Application {
 				typo = typo + String.valueOf(answerChar[a]);
 			} else {
 				typo = typo + " ";
+				//　-半角全角を判別してスペースの幅を調節-
+				//　-半角全角の判別はできた-
+				//　-スペース幅の調整がうまくいかない-
+				/*if( questionChar[a] <= '\u007e' ||
+					questionChar[a] == '\u00a5' ||
+					questionChar[a] == '\u203e' ||
+					(questionChar[a] >= '\uff61' && questionChar[a] <= '\uff9f')
+					) {
+					typo = typo + "　";	//　-半角-
+				} else {
+					typo = typo + "　　";	//　-全角-
+				}*/
 			}
 		}
 		return typo;
@@ -158,7 +170,7 @@ public class Main extends Application {
 	public void setPage2(int md) {
 		mode = md;
 		pageNum = 1;
-		View();
+		turnPageAnimation();
 		transitionTask();
 	}
 	
@@ -179,14 +191,14 @@ public class Main extends Application {
 	//　--他ページからpage1に戻るときに実行、backViewで戻っているように見せる--
 	public void backToPage1() {
 		pageNum = 0;
-		backView();
+		backTurnPageAnimation();
 		transitionTask();
 	}
 	
 	
 	//　--page2のonOKにて実行、計測の準備をしつつpage3へ遷移--
 	public void setPage3() {
-		count = 0;
+		quesCount = 0;
 		score = 0;
 		questionList.clear();
 		answerList.clear();
@@ -199,7 +211,7 @@ public class Main extends Application {
 		}
 		
 		pageNum = 2;
-		View();
+		turnPageAnimation();
 		transitionTask();
 	}
 	
@@ -215,13 +227,13 @@ public class Main extends Application {
 		}
 		questionList.add(sentence);
 		answerList.add(textField);
-		count++;
+		quesCount++;
 		
 		// -10問モードの場合、10問目が終わった時点で測定を終了させ、結果表示画面（page4）へ遷移する-
-		if(mode == 2 && count > 9) {
+		if(mode == 2 && quesCount > 9) {
 			endTime = Calendar.getInstance();
 			pageNum = 3;
-			View();
+			turnPageAnimation();
 			transitionTask();
 			return;
 		}
@@ -244,7 +256,7 @@ public class Main extends Application {
 			endTime = Calendar.getInstance();
 		}
 		pageNum = 3;
-		View();
+		turnPageAnimation();
 		transitionTask();
 	}
 	
@@ -252,7 +264,7 @@ public class Main extends Application {
 	public String setResult(int md) {
 		switch(md) {
 		case 1:
-			return ("回答数 : " + count + "問");
+			return ("回答数 : " + quesCount + "問");
 		case 2:
 			return resultTime();
 		default:
@@ -261,12 +273,14 @@ public class Main extends Application {
 	}
 	
 	// --page4にてモードによってperfectLabelに入る文字列を返す--
-	public String setPerfect(boolean b) {
-		if(b) {
-			return ("PERFECT!!");
-		} else {
-			return (" ");
+	public String setPerfect(boolean perfect, boolean good) {
+		if(perfect) {
+			return "PERFECT!!";
 		}
+		if(good) {
+			return "GOOD";
+		}
+		return " ";
 	}
 	
 //---------------------------------
@@ -279,6 +293,8 @@ public class Main extends Application {
 			AnchorPane root = (AnchorPane)FXMLLoader.load(getClass().getResource("page1.fxml"));
 			Scene scene = new Scene(root);
 			scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
+			primaryStage.setTitle("やってみよう！短文入力");
+			primaryStage.setResizable(false);
 			primaryStage.setScene(scene);
 			primaryStage.show();
 		} catch(Exception e) {
