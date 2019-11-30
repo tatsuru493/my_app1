@@ -20,49 +20,49 @@ public class page3Controller implements Initializable {
     private URL location;
 
     @FXML
-    private Label numberLabel;
+    private Label quesNumLabel;
 
     @FXML
-    private Label sentenceLabel;
+    private Label quesSentLabel;
 
     @FXML
-    private TextField TextField1;
+    private TextField ansTextField;
 
     @FXML
-    private Button nextButton;
+    private Button nextQuestionButton;
 
     @FXML
-    private Button cancelButton_p3;
+    private Button cancelButton;
 
     @FXML
-    void onActionTextField(ActionEvent event) {
-    	Main.getInstance().nextQuestion(sentenceLabel.getText(), TextField1.getText());
+    void onAnsTextFieldAction(ActionEvent event) {
+    	Main.getInstance().nextQuestion(quesSentLabel.getText(), ansTextField.getText());
+    }
+    
+    @FXML
+    void onNextQuestionButton(ActionEvent event) {
+    	Main.getInstance().nextQuestion(quesSentLabel.getText(), ansTextField.getText());
     }
 
     @FXML
-    void onCancel_p3(ActionEvent event) {
+    void onCancelButton(ActionEvent event) {
     	Main.getInstance().cancel();
     }
 
     @FXML
-    void onNext(ActionEvent event) {
-    	Main.getInstance().nextQuestion(sentenceLabel.getText(), TextField1.getText());
-    }
-
-    @FXML
     void initialize() {
-        assert numberLabel != null : "fx:id=\"numberLabel\" was not injected: check your FXML file 'page3.fxml'.";
-        assert sentenceLabel != null : "fx:id=\"sentenceLabel\" was not injected: check your FXML file 'page3.fxml'.";
-        assert TextField1 != null : "fx:id=\"TextField1\" was not injected: check your FXML file 'page3.fxml'.";
-        assert nextButton != null : "fx:id=\"nextButton\" was not injected: check your FXML file 'page3.fxml'.";
-        assert cancelButton_p3 != null : "fx:id=\"cancelButton_p3\" was not injected: check your FXML file 'page3.fxml'.";
+        assert quesNumLabel != null : "fx:id=\"numberLabel\" was not injected: check your FXML file 'page3.fxml'.";
+        assert quesSentLabel != null : "fx:id=\"sentenceLabel\" was not injected: check your FXML file 'page3.fxml'.";
+        assert ansTextField != null : "fx:id=\"TextField1\" was not injected: check your FXML file 'page3.fxml'.";
+        assert nextQuestionButton != null : "fx:id=\"nextButton\" was not injected: check your FXML file 'page3.fxml'.";
+        assert cancelButton != null : "fx:id=\"cancelButton_p3\" was not injected: check your FXML file 'page3.fxml'.";
 
     }
     
     @Override
     public void initialize(URL loacation, ResourceBundle resources) {
-    	numberLabel.setText((Main.getInstance().getCount() + 1)  + "問目");
-    	sentenceLabel.setText(sentence.question());
+    	quesNumLabel.setText((Main.getInstance().getQuesCount() + 1)  + "問目");
+    	quesSentLabel.setText(sentence.question());
     }
     
 }
